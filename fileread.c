@@ -1,24 +1,36 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include <string.h>
-struct restaurant { 
-    int num,q1,q2,q3,q,q5; 
-    char name[20];
-}; 
-void ReadFile(FILE *fp,int question);
+
+struct restaurantdata { 
+    char Allname[50];
+};
+
+struct finalrestaurant { 
+    char name[50];
+    char ques[5];
+};
+
+struct finalrestaurant ReadFile(FILE *fp,int question);
  // Function which will read the file content
 int main()
 {		
-	char file_name[11] ="test.csv";
+	char file_Allname[11] ="test.csv";
+	struct finalrestaurant s[10];
 	FILE *fp; //file pointer poiting to file
 	printf("Welcome to the Restaurant recommendation System\n");
-    fp=fopen(file_name, "r"); //buffer created(file information)
+    fp=fopen(file_Allname, "r"); //buffer created(file information)
     if(fp == NULL) //empty file
     {
         printf("Error");
         exit(EXIT_FAILURE);
     }
-    ReadFile(fp,1);
+    s[0] = ReadFile(fp,1);
+    printf("hell%s",s.name);
+    /*ReadFile(fp,2);
+    ReadFile(fp,3);
+    ReadFile(fp,4);
+    ReadFile(fp,5);*/
     fclose(fp);
     return 0;
 }
@@ -27,22 +39,25 @@ int userinput()
 	printf("");
 }
 
-void ReadFile(FILE *fp,int question)
+struct finalrestaurant ReadFile(FILE *fp,int question)
 {
-	int x = 0,a,b,i=0,size,j=0; // i taking count of total restaurant,a used for temp, x sis used for temp
-	char temp[50],name[1000][1000];
-	char userinput;
-	char *vartemp;
+	int count=0,x = 0,a=0,b=0,i=0,j=0,l=0,k=0; // i taking count of total restaurant,a used for temp, x sis used for temp
+	char temp[50],userinput[5];
 	char ch;
-	printf("Question:1-According to you the restaurant must have a pre booking facility?\nif must then enter 1 else 0\n");
-	scanf("%s",&userinput);
+	struct restaurantdata restaurant[6];	
+	struct finalrestaurant finalrestaurants[6];
+	printf("%d",question);
+	if(question == 1)
+	{
+		printf("\nQuestion:1-According to you the restaurant must have a pre booking facility?\nif must then enter 1 else 0\n");
+	}
+	gets(userinput);
 	while((ch = fgetc(fp))!=EOF) //reading file 
     {	
     	if(ch == ';')
     	{
     		a=0;
     		j=0;
-    		printf("\n");
     		for(a;a<x;a++)
     		{
     			temp[a]=0;	
@@ -52,20 +67,25 @@ void ReadFile(FILE *fp,int question)
 		}
 		else if(ch==',')
     	{	
-    	if(j == 0)
-    	{
-    		printf("%s\n",temp);
-		}
-    	if(j == 1)
-    	{
-    		printf("ques 1 :%s\n",temp);
-    		if(userinput == temp)
-    		{
-    			printf("in");
+    		if(j == 0)
+    		{		
+    			char *s;
+				s=temp;
+				strcpy(restaurant[i].Allname,s);
 			}
-		}
+    		else
+    		if (j==1){
+    			char *p;
+				p=temp;
+				if(*userinput==*p)
+				{					
+					strcpy(finalrestaurants[count].name,restaurant[i].Allname);
+					finalrestaurants[count].ques[j-1] = *p;
+					printf("%s",finalrestaurants[count].name);
+					count++;
+				}
+			}
     		a=0;
-			vartemp = temp;
     		for(a;a<x;a++)
     		{		
        			temp[a]=0;
@@ -78,4 +98,43 @@ void ReadFile(FILE *fp,int question)
 			x++;
 		}
 	}
+	float probablity;
+	probablity = (float)count/i *100;
+	printf("\nProbablity of restaurants:%f percent\n",probablity);
+	return finalrestaurants[count];
 };
+
+/*
+
+	else 
+	if(question == 2)
+	{
+		printf("Question:2-According to you the restaurant must have a pre booking facility?\nif must then enter 1 else 0\n");
+	}
+	else 
+	if(question == 3)
+	{
+		printf("Question:3-According to you the restaurant must have a pre booking facility?\nif must then enter 1 else 0\n");
+	}
+	else 
+	if(question == 4)
+	{
+		printf("Question:4-According to you the restaurant must have a pre booking facility?\nif must then enter 1 else 0\n");
+	}
+	else 
+	if(question == 5)
+	{
+		printf("Question:5-According to you the restaurant must have a pre booking facility?\nif must then enter 1 else 0\n");
+	}
+	
+	
+char *s;
+s=temp;
+printf("ques 1 :%s\n",s);
+if(*userinput==*s)
+{
+printf("in");
+}
+				
+				
+*/
