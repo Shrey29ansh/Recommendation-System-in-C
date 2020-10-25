@@ -11,12 +11,16 @@ struct finalrestaurant {
     char ques[5];
 };
 
-struct finalrestaurant ReadFile(FILE *fp,int question);
+int ReadfirstFile(FILE *fp,int question);
+struct restaurantdata restaurant[6];	
+struct finalrestaurant finalrestaurants[6];
  // Function which will read the file content
 int main()
 {		
 	char file_Allname[11] ="test.csv";
-	struct finalrestaurant s[10];
+	struct finalrestaurant s;
+	int count;	
+	int i;
 	FILE *fp; //file pointer poiting to file
 	printf("Welcome to the Restaurant recommendation System\n");
     fp=fopen(file_Allname, "r"); //buffer created(file information)
@@ -25,8 +29,11 @@ int main()
         printf("Error");
         exit(EXIT_FAILURE);
     }
-    s[0] = ReadFile(fp,1);
-    printf("hell%s",s.name);
+    count = ReadfirstFile(fp,1);
+    for(i=0;i<count;i++)
+    {
+    	printf("%s",finalrestaurants[i].ques[0]);
+	}
     /*ReadFile(fp,2);
     ReadFile(fp,3);
     ReadFile(fp,4);
@@ -34,23 +41,19 @@ int main()
     fclose(fp);
     return 0;
 }
-int userinput()
-{
-	printf("");
-}
 
-struct finalrestaurant ReadFile(FILE *fp,int question)
+int ReadfirstFile(FILE *fp,int question)
 {
 	int count=0,x = 0,a=0,b=0,i=0,j=0,l=0,k=0; // i taking count of total restaurant,a used for temp, x sis used for temp
 	char temp[50],userinput[5];
 	char ch;
-	struct restaurantdata restaurant[6];	
-	struct finalrestaurant finalrestaurants[6];
+
 	printf("%d",question);
 	if(question == 1)
 	{
-		printf("\nQuestion:1-According to you the restaurant must have a pre booking facility?\nif must then enter 1 else 0\n");
+		printf("\nQuestion:1-z\n");
 	}
+		printf("Enter your choice\nFor Yes choose 1 else choose 0\n");
 	gets(userinput);
 	while((ch = fgetc(fp))!=EOF) //reading file 
     {	
@@ -81,11 +84,12 @@ struct finalrestaurant ReadFile(FILE *fp,int question)
 				{					
 					strcpy(finalrestaurants[count].name,restaurant[i].Allname);
 					finalrestaurants[count].ques[j-1] = *p;
-					printf("%s",finalrestaurants[count].name);
 					count++;
 				}
 			}
+			
     		a=0;
+    		
     		for(a;a<x;a++)
     		{		
        			temp[a]=0;
@@ -101,7 +105,7 @@ struct finalrestaurant ReadFile(FILE *fp,int question)
 	float probablity;
 	probablity = (float)count/i *100;
 	printf("\nProbablity of restaurants:%f percent\n",probablity);
-	return finalrestaurants[count];
+	return count;
 };
 
 /*
