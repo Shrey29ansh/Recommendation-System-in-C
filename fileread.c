@@ -21,7 +21,7 @@ int main()
 {		
 	char file_Allname[11] ="test.csv";
 	int count;	
-	int i,j;
+	int i,j,quesloop;
 	FILE *fp; //file pointer poiting to file
 	printf("Welcome to the Restaurant recommendation System\n");
     fp=fopen(file_Allname, "r"); //buffer created(file information)
@@ -32,9 +32,20 @@ int main()
     }
     count = ReadFile(fp,1);
     fclose(fp);
-	NextQuestion(2,count);
+    for(quesloop=2;quesloop<6;quesloop++)
+	{
+		printf("\n%d",count);
+		count = NextQuestion(quesloop,count);
+
+	}
     return 0;
 }
+void Probability(int remaining,int total)
+{
+	float probablity;
+	probablity = (float)remaining/total *100;
+	printf("\nProbablity of restaurants:%f percent\n",probablity);
+};
 
 int ReadFile(FILE *fp,int question)
 {
@@ -81,7 +92,7 @@ int ReadFile(FILE *fp,int question)
 					choice = true;
 					pos =count;
 					strcpy(finalrestaurants[count].name,restaurant[i].Allname);
-					finalrestaurants[count].ques[j-1] = *p;
+					sscanf(p,"%d",&finalrestaurants[count].ques[j-1]); //typecasting
 					count++;
 					}
 					else{
@@ -92,7 +103,7 @@ int ReadFile(FILE *fp,int question)
     		{
     			char *m;
 				m=temp;	
-				finalrestaurants[pos].ques[j-1] = *m;
+				sscanf(m,"%d",&finalrestaurants[pos].ques[j-1]); //typecasting
 			}	
     		a=0;
     		for(a;a<x;a++)
@@ -115,48 +126,108 @@ int ReadFile(FILE *fp,int question)
     	for(i=0;i<count;i++)
     	{
     		printf("%s",finalrestaurants[i].name);	
+    		for(j=0;j<5;j++)
+    		{
+    		printf("%d",finalrestaurants[i].ques[j]);		
+			}
 		}
 	}
 	return count;
 };
 
-void Probability(int remaining,int total)
+int InputNum()
 {
-	float probablity;
-	probablity = (float)remaining/total *100;
-	printf("\nProbablity of restaurants:%f percent\n",probablity);
-} 
+	int inputnum;
+	printf("\nEnter your choice\nFor Yes choose 1 else choose 0\n");
+	scanf("%d",&inputnum);
+	return inputnum;
+};
 
-void NextQuestion(int quesno,int count)
+int NextQuestion(int quesno,int count)
 {
-	int input;
+	int nextcount;
+
 	int i,j;
 	if(quesno == 2)
 	{
-		printf("Question-2");
-		input = Input();
-		printf("%d",input);		
+			int input;
+		printf("\nQuestion-2");
+		input = InputNum();
+		nextcount = SortingQuestions(quesno,input,count);
+		
 	}
-if(quesno == 3)
+	if(quesno == 3)
 	{
-		printf("Question-3");
+			int input;
+		printf("\nQuestion-3");
+		input = InputNum();
+		nextcount = SortingQuestions(quesno,input,count);
+;
 	}
-if(quesno == 4)
+	if(quesno == 4)
 	{
-		printf("Question-4");
+			int input;
+		printf("\nQuestion-4");
+		input = InputNum();
+		nextcount = SortingQuestions(quesno,input,count);
+		
 	}
- if(quesno == 5)
+ 	if(quesno == 5)
 	{
-		printf("Question-5");
-	}
+		int input;
+		printf("\nQuestion-5");
+		input = InputNum();
+		nextcount = SortingQuestions(quesno,input,count);
 
-	
-}
+	}
+		return nextcount;
+};
 
-void Input()
+
+
+int SortingQuestions(int quesno,int finalinput,int count)
 {
-	int input;
-	printf("\nEnter your choice\nFor Yes choose 1 else choose 0\n");
-	scanf("%d",&input);
-	return input;
-}
+	int nextcount=0;
+	int loop;
+	int i,j;
+	printf("in function%d %d %d",count,quesno,finalinput);
+	nextcount= count;
+	for(loop = 0; loop<count;loop++)
+	{
+		if(loop != count-1)
+		{
+			//printf("%d",finalrestaurants[loop].ques[quesno-1]);
+			if(finalinput != finalrestaurants[loop].ques[quesno-1])
+			{
+					nextcount--;
+					strcpy(finalrestaurants[loop].name,finalrestaurants[loop+1].name);
+					for(i=0;i<5;i++)
+					{
+						finalrestaurants[loop].ques[i]=finalrestaurants[loop+1].ques[i];
+					}
+			}
+			
+		}	
+		else
+		{
+			if(finalinput != finalrestaurants[loop].ques[quesno-1])
+			{
+				nextcount--;
+				for(i=0;i<5;i++)
+					{
+						finalrestaurants[loop+1].ques[i]=finalrestaurants[loop].ques[i];
+					}
+				
+			}
+		}
+	}
+	for(i=0;i<nextcount;i++)
+    	{
+    		printf("%s",finalrestaurants[i].name);	
+    		for(j=0;j<5;j++)
+    		{
+    		printf("%d",finalrestaurants[i].ques[j]);		
+			}
+		}
+	return nextcount;
+};
