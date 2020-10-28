@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include <string.h>
+#include <stdbool.h> 
 
 struct restaurantdata { 
     char Allname[50];
@@ -11,16 +12,16 @@ struct finalrestaurant {
     char ques[5];
 };
 
-int ReadfirstFile(FILE *fp,int question);
+
 struct restaurantdata restaurant[6];	
-struct finalrestaurant finalrestaurants[6];
- // Function which will read the file content
+struct finalrestaurant finalrestaurants[];
+int nextques;
+
 int main()
 {		
 	char file_Allname[11] ="test.csv";
-	struct finalrestaurant s;
 	int count;	
-	int i;
+	int i,j;
 	FILE *fp; //file pointer poiting to file
 	printf("Welcome to the Restaurant recommendation System\n");
     fp=fopen(file_Allname, "r"); //buffer created(file information)
@@ -29,31 +30,24 @@ int main()
         printf("Error");
         exit(EXIT_FAILURE);
     }
-    count = ReadfirstFile(fp,1);
-    for(i=0;i<count;i++)
-    {
-    	printf("%s",finalrestaurants[i].ques[0]);
-	}
-    /*ReadFile(fp,2);
-    ReadFile(fp,3);
-    ReadFile(fp,4);
-    ReadFile(fp,5);*/
+    count = ReadFile(fp,1);
     fclose(fp);
+	NextQuestion(2,count);
     return 0;
 }
 
-int ReadfirstFile(FILE *fp,int question)
+int ReadFile(FILE *fp,int question)
 {
 	int count=0,x = 0,a=0,b=0,i=0,j=0,l=0,k=0; // i taking count of total restaurant,a used for temp, x sis used for temp
 	char temp[50],userinput[5];
 	char ch;
-
-	printf("%d",question);
+	int pos=1; // for the struct questions
+	bool choice=false;
 	if(question == 1)
 	{
 		printf("\nQuestion:1-z\n");
 	}
-		printf("Enter your choice\nFor Yes choose 1 else choose 0\n");
+	printf("Enter your choice\nFor Yes choose 1 else choose 0\n");
 	gets(userinput);
 	while((ch = fgetc(fp))!=EOF) //reading file 
     {	
@@ -70,26 +64,37 @@ int ReadfirstFile(FILE *fp,int question)
 		}
 		else if(ch==',')
     	{	
+    		
     		if(j == 0)
     		{		
     			char *s;
 				s=temp;
-				strcpy(restaurant[i].Allname,s);
+				strcpy(restaurant[i].Allname,s); // in c langauge strings are stored as array.
 			}
     		else
-    		if (j==1){
+    		if (j==1)
+			{
     			char *p;
 				p=temp;
 				if(*userinput==*p)
-				{					
+				{		
+					choice = true;
+					pos =count;
 					strcpy(finalrestaurants[count].name,restaurant[i].Allname);
 					finalrestaurants[count].ques[j-1] = *p;
 					count++;
-				}
+					}
+					else{
+						choice = false;
+					}
 			}
-			
+			if(choice)
+    		{
+    			char *m;
+				m=temp;	
+				finalrestaurants[pos].ques[j-1] = *m;
+			}	
     		a=0;
-    		
     		for(a;a<x;a++)
     		{		
        			temp[a]=0;
@@ -102,43 +107,56 @@ int ReadfirstFile(FILE *fp,int question)
 			x++;
 		}
 	}
-	float probablity;
-	probablity = (float)count/i *100;
-	printf("\nProbablity of restaurants:%f percent\n",probablity);
+	Probability(count,i);
+	printf("Choose an option\n1.Show List of Restaurants\n2.Proceed to Next Question\n");
+	scanf("%d",&nextques);
+	if(nextques == 1)
+	{		
+    	for(i=0;i<count;i++)
+    	{
+    		printf("%s",finalrestaurants[i].name);	
+		}
+	}
 	return count;
 };
 
-/*
-
-	else 
-	if(question == 2)
-	{
-		printf("Question:2-According to you the restaurant must have a pre booking facility?\nif must then enter 1 else 0\n");
-	}
-	else 
-	if(question == 3)
-	{
-		printf("Question:3-According to you the restaurant must have a pre booking facility?\nif must then enter 1 else 0\n");
-	}
-	else 
-	if(question == 4)
-	{
-		printf("Question:4-According to you the restaurant must have a pre booking facility?\nif must then enter 1 else 0\n");
-	}
-	else 
-	if(question == 5)
-	{
-		printf("Question:5-According to you the restaurant must have a pre booking facility?\nif must then enter 1 else 0\n");
-	}
-	
-	
-char *s;
-s=temp;
-printf("ques 1 :%s\n",s);
-if(*userinput==*s)
+void Probability(int remaining,int total)
 {
-printf("in");
+	float probablity;
+	probablity = (float)remaining/total *100;
+	printf("\nProbablity of restaurants:%f percent\n",probablity);
+} 
+
+void NextQuestion(int quesno,int count)
+{
+	int input;
+	int i,j;
+	if(quesno == 2)
+	{
+		printf("Question-2");
+		input = Input();
+		printf("%d",input);		
+	}
+if(quesno == 3)
+	{
+		printf("Question-3");
+	}
+if(quesno == 4)
+	{
+		printf("Question-4");
+	}
+ if(quesno == 5)
+	{
+		printf("Question-5");
+	}
+
+	
 }
-				
-				
-*/
+
+void Input()
+{
+	int input;
+	printf("\nEnter your choice\nFor Yes choose 1 else choose 0\n");
+	scanf("%d",&input);
+	return input;
+}
