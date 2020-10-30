@@ -1,0 +1,157 @@
+1. Declare global struct data structure and it's associated members.
+
+struct restaurantdata { 
+    char Allname[50];
+};
+
+struct finalrestaurant { 
+    char name[50];
+    char ques[5];
+};
+
+struct restaurantdata restaurant[];	
+struct finalrestaurant finalrestaurants[];
+
+
+
+2. Create a function which will take the user input for each particular question with a int return type. Input()
+
+initialise userinput.
+
+input the userinput;
+Return (userinput);
+
+
+
+3. Create a function which will return the probablity. Probablity()
+Pass-in parameters: int remaining, int total
+
+probablity = (float)remaining/total *100;
+Return (probablity);
+
+
+
+4. Create a function to read a file. Readfile()
+Pass-in parameters: FILE *fp, int question
+
+Initialise: char ch, char temp[20].
+Initialise to zero: count,x,a,b,i,j,l,k.
+
+Print "question-1"
+Print "Enter you choice"
+Call Function-Input()
+while reading file !=EOF
+	if ch == ';'
+		for a=0 to x
+			temp[a]=0;
+		end for		
+		assign value of x,j to zero;
+		increement the row count;
+	end if
+	else if ch == ','
+		if j is zero
+			declare char pointer s
+			s=temp;
+			strcpy(restaurant[i].Allname,s);
+		end if
+		else if j is one
+			declare char pointer p
+			char *p;
+			p=temp;
+			if *userinput==*p	
+				choice = true;
+				pos =count;
+				strcpy(finalrestaurants[count].name,restaurant[i].Allname);
+				sscanf(p,"%d",&finalrestaurants[count].ques[j-1]); //typecasting
+				count++;
+			end if
+			else
+				choice = false;
+			end else
+		end if
+		if choice 
+			char *m;
+			m=temp;	
+			sscanf(m,"%d",&finalrestaurants[pos].ques[j-1]);
+		end if
+		a=0;
+    		for(a;a<x;a++)	
+       			temp[a]=0;
+		end for
+		j++;
+		x=0;
+	end if
+	else
+		temp[x]=ch;
+		x++;
+	end else 
+end while
+Call Function-Pobability(count,i)
+Print "Choose an option\n1.Show List of Restaurants\n2.Proceed to Next Question\n"
+input choice
+if choice == 1
+	for(i=0;i<count;i++)
+    		printf("%s",finalrestaurants[i].name);	
+    		for(j=0;j<5;j++)
+    			printf("%d",finalrestaurants[i].ques[j]);		
+		end for
+	end for
+end if
+Return (count);
+
+
+
+4. Create a function for next questions. NextQuestions()
+Pass-in-Parameters:int quesno,int count
+int nextcount;
+int i,j;
+if quesno == 2 
+	int input;
+	print "\nQuestion-2";
+	input = InputNum();
+	nextcount = SortingQuestions(quesno,input,count);		
+end if
+if quesno == 3	
+	int input;
+	printf("\nQuestion-3");
+	input = InputNum();
+	nextcount = SortingQuestions(quesno,input,count);
+end if
+if quesno == 4
+	int input;
+	print "\nQuestion-4";
+	input = InputNum();
+	nextcount = SortingQuestions(quesno,input,count);
+end if
+if quesno == 5
+	int input;	
+	printf("\nQuestion-5");
+	input = InputNum();
+	nextcount = SortingQuestions(quesno,input,count);
+end if
+Return (nextcount);
+		
+
+int main()
+{		
+	char file_Allname[11] ="test.csv";
+	int count;	
+	int i,j,quesloop;
+	FILE *fp; //file pointer poiting to file
+	printf("Welcome to the Restaurant recommendation System\n");
+    fp=fopen(file_Allname, "r"); //buffer created(file information)
+    if(fp == NULL) //empty file
+    {
+        printf("Error");
+        exit(EXIT_FAILURE);
+    }
+    count = ReadFile(fp,1);
+    fclose(fp);
+    for(quesloop=2;quesloop<6;quesloop++)
+	{
+		printf("\n%d",count);
+		count = NextQuestion(quesloop,count);
+
+	}
+    return 0;
+}

@@ -13,33 +13,11 @@ struct finalrestaurant {
 };
 
 
-struct restaurantdata restaurant[6];	
-struct finalrestaurant finalrestaurants[];
+
+struct finalrestaurant finalrestaurants[10];
+struct restaurantdata restaurant[10];	
 int nextques;
 
-int main()
-{		
-	char file_Allname[11] ="test.csv";
-	int count;	
-	int i,j,quesloop;
-	FILE *fp; //file pointer poiting to file
-	printf("Welcome to the Restaurant recommendation System\n");
-    fp=fopen(file_Allname, "r"); //buffer created(file information)
-    if(fp == NULL) //empty file
-    {
-        printf("Error");
-        exit(EXIT_FAILURE);
-    }
-    count = ReadFile(fp,1);
-    fclose(fp);
-    for(quesloop=2;quesloop<6;quesloop++)
-	{
-		printf("\n%d",count);
-		count = NextQuestion(quesloop,count);
-
-	}
-    return 0;
-}
 void Probability(int remaining,int total)
 {
 	float probablity;
@@ -48,14 +26,15 @@ void Probability(int remaining,int total)
 };
 
 int ReadFile(FILE *fp,int question)
-{
+{	
+
 	int count=0,x = 0,a=0,b=0,i=0,j=0,l=0,k=0; // i taking count of total restaurant,a used for temp, x sis used for temp
 	char temp[50],userinput[5];
 	char ch;
 	int pos=1; // for the struct questions
 	bool choice=false;
 	if(question == 1)
-	{
+	{	
 		printf("\nQuestion:1-z\n");
 	}
 	printf("Enter your choice\nFor Yes choose 1 else choose 0\n");
@@ -64,13 +43,12 @@ int ReadFile(FILE *fp,int question)
     {	
     	if(ch == ';')
     	{
-    		a=0;
-    		j=0;
-    		for(a;a<x;a++)
+    		for(a=0;a<x;a++)
     		{
     			temp[a]=0;	
 			}
 			x=0;
+			j=0;
 			i++;
 		}
 		else if(ch==',')
@@ -126,10 +104,7 @@ int ReadFile(FILE *fp,int question)
     	for(i=0;i<count;i++)
     	{
     		printf("%s",finalrestaurants[i].name);	
-    		for(j=0;j<5;j++)
-    		{
-    		printf("%d",finalrestaurants[i].ques[j]);		
-			}
+    
 		}
 	}
 	return count;
@@ -150,7 +125,7 @@ int NextQuestion(int quesno,int count)
 	int i,j;
 	if(quesno == 2)
 	{
-			int input;
+		int input;
 		printf("\nQuestion-2");
 		input = InputNum();
 		nextcount = SortingQuestions(quesno,input,count);
@@ -190,7 +165,6 @@ int SortingQuestions(int quesno,int finalinput,int count)
 	int nextcount=0;
 	int loop;
 	int i,j;
-	printf("in function%d %d %d",count,quesno,finalinput);
 	nextcount= count;
 	for(loop = 0; loop<count;loop++)
 	{
@@ -224,10 +198,28 @@ int SortingQuestions(int quesno,int finalinput,int count)
 	for(i=0;i<nextcount;i++)
     	{
     		printf("%s",finalrestaurants[i].name);	
-    		for(j=0;j<5;j++)
-    		{
-    		printf("%d",finalrestaurants[i].ques[j]);		
-			}
 		}
 	return nextcount;
+};
+int main()
+{		
+	char file_Allname[11] ="test.csv";
+	int count;	
+	int i,j,quesloop;
+	FILE *fp; //file pointer poiting to file
+	printf("Welcome to the Restaurant recommendation System\n");
+    fp=fopen(file_Allname, "r"); //buffer created(file information)
+    if(fp == NULL) //empty file
+    {
+        printf("Error");
+        exit(EXIT_FAILURE);
+    }
+    count = ReadFile(fp,1);
+    fclose(fp);
+    for(quesloop=2;quesloop<6;quesloop++)
+	{
+		count = NextQuestion(quesloop,count);
+
+	}
+    return 0;
 };

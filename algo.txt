@@ -1,0 +1,15 @@
+Algorithm
+
+1. START
+3. Define struct finalrestaurants
+2. Declare variable count and file pointer.
+3. Assign file pointer to fopen() function with read mode.
+4. If file is not opened, print error message.
+5. function Readfile(FILE *fp,int question)
+5.1 Declare variables 
+5.2 function Input()
+5.2.1 printf("Enter Choice");
+5.2.2 scanf("%d",&inputnum);
+5.2.3 return inputnum;
+5.3 while(read file till EOF)
+5.
