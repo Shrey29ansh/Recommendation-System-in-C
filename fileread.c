@@ -4,23 +4,28 @@
 #include <stdbool.h> 
 
 struct restaurantdata { 
-    char Allname[50];
+    char Allname[50]; // temp struct to keep track of the restaurant name and futher used in userdata.
 };
 
 struct finalrestaurant { 
-    char name[50];
-    char ques[5];
-};
+    char name[50]; //name of that restaurant
+    char ques[5]; // question's impressions
+}; //this struct holds the data for each restaurant loaded from test.csv file
 
 struct userdata {
-	int userdataques[5];
-};
-//Global Variables
-struct userdata finaluserdata[96];
-struct finalrestaurant finalrestaurants[96];
-struct restaurantdata restaurant[96];	
+	int userdataques[5]; // the dummy data already loaded from user.csv.
+	struct restaurantdata recommend[10]; //holds the restaurant data that can be recommended.
+	int recommend_number; // tracks the number of total restaurants per user.
+}; // this structure holds the data of recorded users not the current user.
+
+
+
+struct userdata finaluserdata[96]; //loaded from user.csv
+struct finalrestaurant finalrestaurants[96]; //loaded from test.csv
+struct restaurantdata restaurant[96]; // temp data for test.csv 
 int nextques;
-int usrnum;
+int usrnum; //to track the usernumber loaded from user.csv
+
 
 
 void Probability(int remaining,int total)
@@ -105,15 +110,98 @@ int ReadFile(FILE *fp,FILE *fpp,int question)
 		}
 	}
 	Probability(count,i);
-	printf("Choose an option\n1.Show List of Restaurants\n2.Proceed to Next Question\n");
+	while((ch = fgetc(fpp))!=EOF) //reading file 
+    {	
+        if(ch == '/')
+        {
+            char *s;
+			s=temp;
+            sscanf(s,"%d",&usrnum);
+            x=0;
+        }
+    	if(ch == ';')
+    	{	
+			if(uerchoice)
+    		{
+				finaluserdata[userdatapos].recommend_number=j-5;
+				printf("%d",finaluserdata[userdatapos].recommend_number);
+				char *s;
+				s=temp;
+				strcpy(finaluserdata[userdatapos].recommend[j-6].Allname,s);
+			}
+    		for(a=0;a<x;a++)
+    		{
+    			temp[a]=0;	
+			}
+			x=0;
+			j=0;
+			i++;
+		}
+		else if(ch==',')
+    	{		
+    		if (j==1)
+			{
+    			char *q;
+				q=temp;
+				if(*userinput==*q)
+				{		
+					uerchoice = true;
+					userdatapos =usercount;
+					sscanf(q,"%d",&finaluserdata[usercount].userdataques[j-1]); //typecasting
+					usercount++;
+					}
+					else{
+						uerchoice = false;
+					}
+			}
+			if(j>5)
+			{
+				if(uerchoice)
+				{
+					finaluserdata[userdatapos].recommend_number=j-5;
+					//printf("%d",finaluserdata[userdatapos].recommend_number);
+					char *s;
+					s=temp;
+					strcpy(finaluserdata[userdatapos].recommend[j-6].Allname,s);
+				}
+			}
+			if(uerchoice)
+    		{
+    			char *k;
+			    k=temp;	
+				sscanf(k,"%d",&finaluserdata[userdatapos].userdataques[j-1]); //typecasting
+			}	
+    		a=0;
+    		for(a;a<x;a++)
+    		{		
+       			temp[a]=0;
+			}
+			j++;
+			x=0;
+		}
+		else{
+			temp[x]=ch;
+			x++;
+		}
+	}
+	printf("Choose an option\n1.Show List of Restaurants and Recommendations\n2.Proceed to Next Question\n");
 	scanf("%d",&nextques);
 	if(nextques == 1)
 	{		
+		printf("Content Filtering\n");
     	for(i=0;i<count;i++)
     	{
-			printf("%s",finalrestaurants[i].name);
+			puts(finalrestaurants[i].name);
 		}
-	}
+		printf("Collaberative Filtering\n");
+		for(i=0;i<usercount;i++)
+    	{
+			for(j=0;j<finaluserdata[i].recommend_number;j++)
+			{
+			    printf("%s, ",finaluserdata[i].recommend[j].Allname);
+			}
+		} 
+	} 
 	return count;
 };
 
@@ -136,7 +224,7 @@ int SortingQuestions(int quesno,int finalinput,int count)
 		if (finalinput != finalrestaurants[loop].ques[quesno-1])
 		{
 			nextcount =nextcount-1;
-			for(j=loop;j<nextcount;j++)
+			for(int j=loop;j<nextcount;j++)
 				finalrestaurants[j]=finalrestaurants[j+1];
 		}
 		else
@@ -198,98 +286,3 @@ int main()
 	}
     return 0;
 };
-	/* for(i=0;i<usercount;i++)
-    {
-        printf("\n");
-        for(j=0;j<5;j++)
-        {
-            printf("%d",finaluserdata[i].userdataques[j]);
-        }
-	} */
-/* 
-for(loop = 0; loop<count;loop++)
-	{
-		if(loop != count-1)
-		{
-			//printf("%d",finalrestaurants[loop].ques[quesno-1]);
-			if(finalinput != finalrestaurants[loop].ques[quesno-1])
-			{
-					nextcount--;
-					strcpy(finalrestaurants[loop].name,finalrestaurants[loop+1].name);
-					for(i=0;i<5;i++)
-					{
-						finalrestaurants[loop].ques[i]=finalrestaurants[loop+1].ques[i];
-					}
-			}
-			
-		}	
-		else
-		{
-			if(finalinput != finalrestaurants[loop].ques[quesno-1])
-			{
-				nextcount--;
-				for(i=0;i<5;i++)
-					{
-						finalrestaurants[loop+1].ques[i]=finalrestaurants[loop].ques[i];
-					}
-				
-			}
-		}
-	}
-*/
-	/* while((ch = fgetc(fpp))!=EOF) //reading file 
-    {	
-        if(ch == ':')
-        {
-            char *s;
-			s=temp;
-            sscanf(s,"%d",&usrnum);
-			
-            x=0;
-        }
-    	if(ch == ';')
-    	{
-    		for(a=0;a<x;a++)
-    		{
-    			temp[a]=0;	
-			}
-			x=0;
-			j=0;
-			l++;
-		}
-		else if(ch==',')
-    	{		
-    		if (j==1)
-			{
-    			char *q;
-				q=temp;
-				if(*userinput==*q)
-				{		
-					uerchoice = true;
-					userdatapos =usercount;
-					sscanf(q,"%d",&finaluserdata[usercount].userdataques[j-1]); //typecasting
-					usercount++;
-					}
-					else{
-						uerchoice = false;
-					}
-			}
-			if(uerchoice)
-    		{
-    			char *k;
-			    k=temp;	
-				sscanf(k,"%d",&finaluserdata[userdatapos].userdataques[j-1]); //typecasting
-			}	
-    		a=0;
-    		for(a;a<x;a++)
-    		{		
-       			temp[a]=0;
-			}
-			j++;
-			x=0;
-		}
-		else{
-			temp[x]=ch;
-			x++;
-		}
-	} */
